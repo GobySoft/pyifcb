@@ -6,7 +6,6 @@ import os
 from io import BytesIO
 
 import pandas as pd
-from pandas.errors import EmptyDataError
 
 from functools import lru_cache
 
@@ -98,7 +97,7 @@ def parse_adc_file(adc_file):
         df = pd.read_csv(adc_file, header=None, index_col=False)
         df.index += 1 # index by 1-based ROI number
         return df
-    except EmptyDataError:
+    except ValueError:
         s = SCHEMA[Pid(adc_file).schema_version]
         cols = s._cols
         return pd.DataFrame({c:[] for c in cols}, columns=cols)
